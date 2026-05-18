@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultados - Analisis de Poros</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <main class="container">
+    <section class="hero compact">
+      <h1>Resultados</h1>
+      <a href="/" class="btn-secondary">Volver a Index</a>
+    </section>
+
+    <section class="card">
+      <p><strong>Preset aplicado:</strong> {{ tamano_nm }}</p>
+      <p><strong>Calibracion:</strong> 100 nm = {{ calibration.pixels_100nm }} px | 400 nm = {{ calibration.pixels_400nm }} px</p>
+      <p><strong>Factor usado:</strong> {{ '%.4f'|format(nm_per_px) }} nm/px</p>
+      <a class="btn-primary" href="/descargar_pdf/{{ pdf_token }}">Descargar informe PDF</a>
+    </section>
+
+    <section class="metrics-grid">
+      <article class="metric-card">
+        <h3>Poros detectados</h3>
+        <p>{{ metricas.n_poros }}</p>
+      </article>
+      <article class="metric-card">
+        <h3>Circunferencia media</h3>
+        <p>{{ '%.2f'|format(metricas.circ_media_nm) if metricas.circ_media_nm==metricas.circ_media_nm else 'N/A' }} nm</p>
+      </article>
+      <article class="metric-card">
+        <h3>Distancia media</h3>
+        <p>{{ '%.2f'|format(metricas.dist_media_nm) if metricas.dist_media_nm==metricas.dist_media_nm else 'N/A' }} nm</p>
+      </article>
+      <article class="metric-card">
+        <h3>Distancia minima</h3>
+        <p>{{ '%.2f'|format(metricas.dist_min_nm) if metricas.dist_min_nm==metricas.dist_min_nm else 'N/A' }} nm</p>
+      </article>
+      <article class="metric-card">
+        <h3>Distancia maxima</h3>
+        <p>{{ '%.2f'|format(metricas.dist_max_nm) if metricas.dist_max_nm==metricas.dist_max_nm else 'N/A' }} nm</p>
+      </article>
+    </section>
+
+    <section class="card image-grid">
+      <div>
+        <h2>Imagen original</h2>
+        <img alt="original" src="data:image/png;base64,{{ original_b64 }}" />
+      </div>
+      <div>
+        <h2>Imagen con detecciones</h2>
+        <img alt="detecciones" src="data:image/png;base64,{{ overlay_b64 }}" />
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Histogramas</h2>
+      {% if hist_b64 %}
+      <img alt="histograma" src="data:image/png;base64,{{ hist_b64 }}" />
+      {% else %}
+      <p>No hay datos suficientes para histogramas.</p>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h2>Tabla de poros</h2>
+      <div class="table-wrap">
+        {{ tabla_html | safe }}
+      </div>
+    </section>
+  </main>
+</body>
+</html>

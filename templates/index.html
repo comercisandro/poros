@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index - Analisis de Poros</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Analisis de Poros</h1>
+      <p>Carga una imagen y elige tamano nominal (100 nm o 400 nm).</p>
+    </section>
+
+    {% if error %}
+    <section class="alert error">{{ error }}</section>
+    {% endif %}
+
+    <section class="card">
+      <h2>Index</h2>
+      <form action="/resultados" method="post" enctype="multipart/form-data" class="form-grid">
+        <label>
+          Imagen
+          <input type="file" name="imagen" accept=".tif,.tiff,.png,.jpg,.jpeg,.bmp" required />
+        </label>
+
+        <label>
+          Tamano de imagen
+          <span class="help" title="100 nm detecta poros mas grandes con menos fragmentacion. 400 nm detecta poros pequenos con mayor sensibilidad y control de ruido.">?</span>
+          <select name="tamano_nm" required>
+            <option value="100nm">100 nm</option>
+            <option value="400nm">400 nm</option>
+          </select>
+        </label>
+
+        <label>
+          Calibracion 100 nm
+          <span class="help" title="Ejemplo: si la barra de 100 nm mide 100 px, ingresa 100.">?</span>
+          <input type="number" name="pixels_100nm" min="0.1" step="0.1" value="{{ calibration_defaults.pixels_100nm }}" required />
+        </label>
+
+        <label>
+          Calibracion 400 nm
+          <span class="help" title="Ejemplo: si la barra de 400 nm mide 77 px, ingresa 77.">?</span>
+          <input type="number" name="pixels_400nm" min="0.1" step="0.1" value="{{ calibration_defaults.pixels_400nm }}" required />
+        </label>
+
+        <button type="submit" class="btn-primary">Procesar y ver resultados</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
